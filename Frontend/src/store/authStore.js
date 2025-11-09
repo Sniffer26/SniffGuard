@@ -195,43 +195,14 @@ export const useAuthStore = create(
           })
 
           // Connect to socket if not already connected
-          if (!socketService.isConnected()) {
+          if (!socketService.isSocketConnected()) {
             socketService.connect(accessToken)
           }
 
         } catch (error) {
           console.error('[AuthStore] Auth check failed:', error)
-
-          // Try to refresh token
-          const { refreshToken: refreshTokenFn } = get()
-          const refreshSuccess = await refreshTokenFn()
-          
-          if (refreshSuccess) {
-            // Retry auth check with new token
-            try {
-              const response = await authService.verifyToken()
-              const { user } = response.data
-
-              console.log('[AuthStore] Token refreshed and verified', { user })
-
-              set({
-                user,
-                isAuthenticated: true,
-                isLoading: false
-              })
-
-              // Connect to socket
-              socketService.connect(get().accessToken)
-
-            } catch (retryError) {
-              console.error('[AuthStore] Retry auth check failed:', retryError)
-              set({ isLoading: false, isAuthenticated: false })
-              get().logout()
-            }
-          } else {
-            console.log('[AuthStore] Token refresh failed, setting loading to false')
-            set({ isLoading: false, isAuthenticated: false })
-          }
+          set({ isLoading: false, isAuthenticated: false })
+          get().logout()
         }
       },
 
