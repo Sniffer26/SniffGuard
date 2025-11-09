@@ -12,6 +12,8 @@
   ],
   "env": {
     "VITE_API_URL": "https://sniffguard-backend.onrender.com/api",
-    "VITE_SERVER_URL": "https://sniffguard-backend.onrender.com"
+    "VITE_SERVER_URL": "https://sniffguard-backend.onrender.com",
+    "VITE_APP_NAME": "SniffGuard",
+    "VITE_APP_VERSION": "1.0.0"
   }
 }
