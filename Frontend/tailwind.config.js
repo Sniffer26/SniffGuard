@@ -10,28 +10,28 @@ export default {
       colors: {
         // Signal-inspired brand color
         signal: {
-          50: '#e8f0fe',
-          100: '#c5dcfc',
-          200: '#9dc6fa',
-          300: '#72aef8',
-          400: '#509cf6',
-          500: '#3a76f0', // Main Signal blue
-          600: '#2c5dd1',
-          700: '#2046ad',
-          800: '#163189',
-          900: '#0e1f65',
+          50: '#f0f9ff',
+          100: '#e0f2fe',
+          200: '#bae6fd',
+          300: '#7dd3fc',
+          400: '#38bdf8',
+          500: '#0ea5e9', // Main Signal blue
+          600: '#0284c7', // Darker Signal blue
+          700: '#0369a1',
+          800: '#075985',
+          900: '#0c4a6e',
         },
         primary: {
-          50: '#e8f0fe',
-          100: '#c5dcfc',
-          200: '#9dc6fa',
-          300: '#72aef8',
-          400: '#509cf6',
-          500: '#3a76f0', // Signal blue
-          600: '#2c5dd1',
-          700: '#2046ad',
-          800: '#163189',
-          900: '#0e1f65',
+          50: '#f0f9ff',
+          100: '#e0f2fe',
+          200: '#bae6fd',
+          300: '#7dd3fc',
+          400: '#38bdf8',
+          500: '#0ea5e9', // Signal blue
+          600: '#0284c7', // Darker Signal blue
+          700: '#0369a1',
+          800: '#075985',
+          900: '#0c4a6e',
         },
         // Dark theme colors (Signal-like dark mode)
         dark: {
