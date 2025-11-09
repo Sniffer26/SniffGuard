@@ -36,7 +36,12 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config
 
-    // Handle token expiration
+    // Prevent infinite loops
+    if (originalRequest.url?.includes('/auth/refresh')) {
+      return Promise.reject(error)
+    }
+
+    // Handle token expiration (only once per request)
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true
 
@@ -45,6 +50,13 @@ api.interceptors.response.use(
         const refreshToken = localStorage.getItem('sniffguard-auth')
         if (refreshToken) {
           const parsedData = JSON.parse(refreshToken)
+          
+          // Check if we have a refresh token
+          if (!parsedData.state.refreshToken) {
+            authService.handleAuthError()
+            return Promise.reject(error)
+          }
+          
           const response = await api.post('/auth/refresh', {
             refreshToken: parsedData.state.refreshToken
           })

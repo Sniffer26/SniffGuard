@@ -19,7 +19,7 @@ const authRoutes = require('./src/routes/auth')
 const { authenticateToken } = require('./src/middleware/auth')
 
 // Import socket handler
-const socketHandler = require('./src/services/socketService')
+const { socketHandler } = require('./src/services/socketService')
 
 const app = express()
 const server = http.createServer(app)

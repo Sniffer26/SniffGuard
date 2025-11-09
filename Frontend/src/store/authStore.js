@@ -203,7 +203,8 @@ export const useAuthStore = create(
           console.error('[AuthStore] Auth check failed:', error)
 
           // Try to refresh token
-          const refreshSuccess = await get().refreshToken()
+          const { refreshToken: refreshTokenFn } = get()
+          const refreshSuccess = await refreshTokenFn()
           
           if (refreshSuccess) {
             // Retry auth check with new token

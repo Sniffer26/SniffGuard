@@ -8,18 +8,32 @@ export default {
   theme: {
     extend: {
       colors: {
+        // Modern brand color (Signal/Telegram inspired)
+        signal: {
+          DEFAULT: '#3a76f0',
+          light: '#5b8ff9',
+          dark: '#2958ba',
+        },
         primary: {
-          50: '#eff6ff',
-          100: '#dbeafe',
-          200: '#bfdbfe',
-          300: '#93c5fd',
-          400: '#60a5fa',
-          500: '#3b82f6',
-          600: '#2563eb',
-          700: '#1d4ed8',
-          800: '#1e40af',
-          900: '#1e3a8a',
-          950: '#172554',
+          50: '#e0f2fe',
+          100: '#bae6fd',
+          200: '#7dd3fc',
+          300: '#38bdf8',
+          400: '#0ea5e9',
+          500: '#0284c7',
+          600: '#0369a1',
+          700: '#075985',
+          800: '#0c4a6e',
+          900: '#082f49',
+        },
+        // Dark theme colors (OLED optimized)
+        dark: {
+          bg: '#0a0a0a',
+          surface: '#1a1a1a',
+          elevated: '#252525',
+          hover: '#2a2a2a',
+          border: '#333333',
+          muted: '#666666',
         },
         success: {
           50: '#f0fdf4',

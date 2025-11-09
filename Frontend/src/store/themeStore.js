@@ -5,8 +5,8 @@ export const useThemeStore = create(
   persist(
     (set, get) => ({
       // State
-      theme: 'auto', // 'light', 'dark', 'auto'
-      systemTheme: 'light',
+      theme: 'dark', // Default to dark like Signal
+      systemTheme: 'dark',
 
       // Actions
       setTheme: (newTheme) => {
