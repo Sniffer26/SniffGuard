@@ -166,20 +166,27 @@ export const useAuthStore = create(
       checkAuth: async () => {
         const { accessToken, refreshToken } = get()
         
+        console.log('[AuthStore] checkAuth called', { hasAccessToken: !!accessToken, hasRefreshToken: !!refreshToken })
+        
         if (!accessToken) {
-          set({ isLoading: false })
+          console.log('[AuthStore] No access token, setting loading to false')
+          set({ isLoading: false, isAuthenticated: false })
           return
         }
 
         set({ isLoading: true })
+        console.log('[AuthStore] Starting auth verification...')
 
         try {
           // Set auth header
           authService.setAuthHeader(accessToken)
 
           // Verify current token
+          console.log('[AuthStore] Calling verifyToken API...')
           const response = await authService.verifyToken()
           const { user } = response.data
+          
+          console.log('[AuthStore] Token verified successfully', { user })
 
           set({
             user,
@@ -193,7 +200,7 @@ export const useAuthStore = create(
           }
 
         } catch (error) {
-          console.error('Auth check failed:', error)
+          console.error('[AuthStore] Auth check failed:', error)
 
           // Try to refresh token
           const refreshSuccess = await get().refreshToken()
@@ -203,6 +210,8 @@ export const useAuthStore = create(
             try {
               const response = await authService.verifyToken()
               const { user } = response.data
+
+              console.log('[AuthStore] Token refreshed and verified', { user })
 
               set({
                 user,
@@ -214,11 +223,13 @@ export const useAuthStore = create(
               socketService.connect(get().accessToken)
 
             } catch (retryError) {
-              console.error('Retry auth check failed:', retryError)
+              console.error('[AuthStore] Retry auth check failed:', retryError)
+              set({ isLoading: false, isAuthenticated: false })
               get().logout()
             }
           } else {
-            set({ isLoading: false })
+            console.log('[AuthStore] Token refresh failed, setting loading to false')
+            set({ isLoading: false, isAuthenticated: false })
           }
         }
       },

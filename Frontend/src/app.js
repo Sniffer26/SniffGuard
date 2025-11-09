@@ -23,6 +23,7 @@ function App() {
     // Initialize theme
     initTheme()
     
+    console.log('[App] Checking authentication...')
     // Check authentication status
     checkAuth()
   }, [initTheme, checkAuth])
@@ -48,6 +49,7 @@ function App() {
 
   // Show loading spinner while checking authentication
   if (isLoading) {
+    console.log('[App] Showing loading spinner, isLoading:', isLoading)
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
@@ -59,6 +61,8 @@ function App() {
       </div>
     )
   }
+
+  console.log('[App] Rendering app, isAuthenticated:', isAuthenticated, 'isLoading:', isLoading)
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
