@@ -32,7 +32,10 @@
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     
     <!-- Theme Color -->
-    <meta name="theme-color" content="#3b82f6" />
+    <meta name="theme-color" content="#0284c7" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="mobile-web-app-capable" content="yes" />
     
     <!-- Apple Touch Icon -->
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -43,76 +46,15 @@
     <title>SniffGuard - Secure Messaging</title>
     
     <style>
-      /* Critical CSS for loading screen */
-      .loading-screen {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 9999;
-        transition: opacity 0.3s ease-in-out;
-      }
-      
-      .loading-content {
-        text-align: center;
-        color: white;
-      }
-      
-      .loading-logo {
-        width: 64px;
-        height: 64px;
-        margin: 0 auto 24px;
-        border-radius: 16px;
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 24px;
-        font-weight: 600;
-        animation: pulse 2s infinite;
-      }
-      
-      .loading-text {
-        font-size: 18px;
-        font-weight: 500;
-        margin-bottom: 8px;
-      }
-      
-      .loading-subtext {
-        font-size: 14px;
-        opacity: 0.8;
-      }
-      
-      @keyframes pulse {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.05); }
-      }
-      
-      /* Hide loading screen when app loads */
-      .app-loaded .loading-screen {
-        opacity: 0;
-        pointer-events: none;
+      /* Simple dark theme */
+      body {
+        margin: 0;
+        background: #0a0a0a;
+        color: #ffffff;
       }
     </style>
   </head>
-  <body class="bg-gray-50 dark:bg-gray-900">
-    <!-- Loading Screen -->
-    <div id="loading-screen" class="loading-screen">
-      <div class="loading-content">
-        <div class="loading-logo">
-          🛡️
-        </div>
-        <div class="loading-text">SniffGuard</div>
-        <div class="loading-subtext">Securing your conversations...</div>
-      </div>
-    </div>
-    
+  <body>
     <!-- React Root -->
     <div id="root"></div>
     
@@ -120,19 +62,6 @@
     <script type="module" src="/src/main.jsx"></script>
     
     <script>
-      // Remove loading screen when page loads
-      window.addEventListener('load', function() {
-        setTimeout(function() {
-          document.body.classList.add('app-loaded');
-          setTimeout(function() {
-            const loadingScreen = document.getElementById('loading-screen');
-            if (loadingScreen) {
-              loadingScreen.remove();
-            }
-          }, 300);
-        }, 1000); // Show loading screen for at least 1 second
-      });
-      
       // Theme detection
       if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
         document.documentElement.classList.add('dark');

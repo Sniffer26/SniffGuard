@@ -2,30 +2,27 @@
   "short_name": "SniffGuard",
   "name": "SniffGuard - Secure Messaging",
   "description": "End-to-end encrypted messaging platform for privacy-first communication",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#0284c7",
+  "background_color": "#0a0a0a",
+  "orientation": "portrait",
+  "scope": "/",
+  "categories": ["social", "productivity"],
+  "lang": "en",
+  "dir": "ltr",
   "icons": [
     {
-      "src": "favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
+      "src": "/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
     },
     {
-      "src": "/android-chrome-192x192.png",
+      "src": "/icon-512.png",
       "type": "image/png",
-      "sizes": "192x192"
-    },
-    {
-      "src": "/android-chrome-512x512.png",
-      "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "512x512",
+      "purpose": "any maskable"
     }
-  ],
-  "start_url": ".",
-  "display": "standalone",
-  "theme_color": "#3b82f6",
-  "background_color": "#ffffff",
-  "orientation": "portrait-primary",
-  "scope": "/",
-  "categories": ["communication", "social", "utilities"],
-  "lang": "en",
-  "dir": "ltr"
+  ]
 }

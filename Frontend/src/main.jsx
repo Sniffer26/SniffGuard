@@ -4,6 +4,13 @@ import { BrowserRouter } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import App from './app.jsx'
 import './index.css'
+import { registerServiceWorker, initInstallPrompt } from './utils/pwa'
+
+// Register Service Worker for PWA
+if (import.meta.env.PROD) {
+  registerServiceWorker();
+  initInstallPrompt();
+}
 
 // Initialize libsodium for encryption
 import sodium from 'libsodium-wrappers'
