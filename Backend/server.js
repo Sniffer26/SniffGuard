@@ -31,7 +31,7 @@ const io = socketIo(server, {
     methods: ["GET", "POST"],
     credentials: true
   },
-  transports: ['websocket'], // More secure, websocket only
+  transports: ['polling', 'websocket'], // Allow both polling and websocket
   pingTimeout: 60000,
   pingInterval: 25000,
   maxHttpBufferSize: 1e6, // 1MB
@@ -59,15 +59,17 @@ const corsOptions = {
     const allowedOrigins = [
       'http://localhost:5173',
       'http://localhost:3000',
+      'https://sniffguard.vercel.app',
       process.env.FRONTEND_URL
     ].filter(Boolean)
     
-    // Allow requests with no origin (mobile apps, etc.)
+    // Allow requests with no origin (mobile apps, Postman, etc.)
     if (!origin) return callback(null, true)
     
     if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true)
     } else {
+      console.warn(`❌ CORS blocked request from origin: ${origin}`)
       callback(new Error('Not allowed by CORS'))
     }
   },
