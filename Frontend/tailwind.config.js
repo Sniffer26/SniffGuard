@@ -8,32 +8,39 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Modern brand color (Signal/Telegram inspired)
+        // Signal-inspired brand color
         signal: {
-          DEFAULT: '#3a76f0',
-          light: '#5b8ff9',
-          dark: '#2958ba',
+          50: '#e8f0fe',
+          100: '#c5dcfc',
+          200: '#9dc6fa',
+          300: '#72aef8',
+          400: '#509cf6',
+          500: '#3a76f0', // Main Signal blue
+          600: '#2c5dd1',
+          700: '#2046ad',
+          800: '#163189',
+          900: '#0e1f65',
         },
         primary: {
-          50: '#e0f2fe',
-          100: '#bae6fd',
-          200: '#7dd3fc',
-          300: '#38bdf8',
-          400: '#0ea5e9',
-          500: '#0284c7',
-          600: '#0369a1',
-          700: '#075985',
-          800: '#0c4a6e',
-          900: '#082f49',
+          50: '#e8f0fe',
+          100: '#c5dcfc',
+          200: '#9dc6fa',
+          300: '#72aef8',
+          400: '#509cf6',
+          500: '#3a76f0', // Signal blue
+          600: '#2c5dd1',
+          700: '#2046ad',
+          800: '#163189',
+          900: '#0e1f65',
         },
-        // Dark theme colors (OLED optimized)
+        // Dark theme colors (Signal-like dark mode)
         dark: {
-          bg: '#0a0a0a',
-          surface: '#1a1a1a',
-          elevated: '#252525',
-          hover: '#2a2a2a',
-          border: '#333333',
-          muted: '#666666',
+          bg: '#1b1b1d',        // Main background (Signal dark)
+          surface: '#2c2c2e',   // Cards, sidebar
+          elevated: '#3a3a3c',  // Elevated surfaces
+          hover: '#48484a',     // Hover states
+          border: '#38383a',    // Borders
+          muted: '#8e8e93',     // Muted text
         },
         success: {
           50: '#f0fdf4',
