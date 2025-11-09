@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="SniffGuard - Secure end-to-end encrypted messaging platform for privacy-first communication" />
+    <meta name="keywords" content="secure chat, encrypted messaging, privacy, e2e encryption" />
+    <meta name="author" content="SniffGuard Team" />
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="SniffGuard - Secure Messaging" />
+    <meta property="og:description" content="Privacy-first encrypted messaging platform" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://sniffguard.com" />
+    <meta property="og:image" content="/og-image.png" />
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="SniffGuard - Secure Messaging" />
+    <meta name="twitter:description" content="Privacy-first encrypted messaging platform" />
+    <meta name="twitter:image" content="/twitter-image.png" />
+    
+    <!-- Preconnect to improve performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- JetBrains Mono for code -->
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#3b82f6" />
+    
+    <!-- Apple Touch Icon -->
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    
+    <!-- Manifest -->
+    <link rel="manifest" href="/manifest.json" />
+    
+    <title>SniffGuard - Secure Messaging</title>
+    
+    <style>
+      /* Critical CSS for loading screen */
+      .loading-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        transition: opacity 0.3s ease-in-out;
+      }
+      
+      .loading-content {
+        text-align: center;
+        color: white;
+      }
+      
+      .loading-logo {
+        width: 64px;
+        height: 64px;
+        margin: 0 auto 24px;
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        font-weight: 600;
+        animation: pulse 2s infinite;
+      }
+      
+      .loading-text {
+        font-size: 18px;
+        font-weight: 500;
+        margin-bottom: 8px;
+      }
+      
+      .loading-subtext {
+        font-size: 14px;
+        opacity: 0.8;
+      }
+      
+      @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+      }
+      
+      /* Hide loading screen when app loads */
+      .app-loaded .loading-screen {
+        opacity: 0;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 dark:bg-gray-900">
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+      <div class="loading-content">
+        <div class="loading-logo">
+          🛡️
+        </div>
+        <div class="loading-text">SniffGuard</div>
+        <div class="loading-subtext">Securing your conversations...</div>
+      </div>
+    </div>
+    
+    <!-- React Root -->
+    <div id="root"></div>
+    
+    <!-- Scripts -->
+    <script type="module" src="/src/main.jsx"></script>
+    
+    <script>
+      // Remove loading screen when page loads
+      window.addEventListener('load', function() {
+        setTimeout(function() {
+          document.body.classList.add('app-loaded');
+          setTimeout(function() {
+            const loadingScreen = document.getElementById('loading-screen');
+            if (loadingScreen) {
+              loadingScreen.remove();
+            }
+          }, 300);
+        }, 1000); // Show loading screen for at least 1 second
+      });
+      
+      // Theme detection
+      if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    </script>
+  </body>
+</html>
