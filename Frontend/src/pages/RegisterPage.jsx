@@ -35,7 +35,7 @@ const RegisterPage = () => {
         username: data.username.trim().toLowerCase(),
         email: data.email.trim().toLowerCase(),
         password: data.password,
-        displayName: data.displayName.trim() || data.username.trim()
+        displayName: (data.displayName || '').trim() || data.username.trim()
       })
 
       if (result.success) {
@@ -141,6 +141,20 @@ const RegisterPage = () => {
                 {errors.email && (
                   <p className="mt-2 text-red-600 dark:text-red-400 text-xs">{errors.email.message}</p>
                 )}
+              </div>
+
+              {/* Display Name Field */}
+              <div>
+                <label htmlFor="displayName" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Display Name <span className="text-gray-400 text-xs">(optional)</span>
+                </label>
+                <input
+                  {...register('displayName')}
+                  type="text"
+                  autoComplete="name"
+                  className="w-full px-4 py-3.5 border border-gray-300 dark:border-dark-border bg-white dark:bg-dark-elevated rounded-2xl text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-signal-500 focus:border-transparent transition-all"
+                  placeholder="Your display name (optional)"
+                />
               </div>
 
               {/* Password Field */}
