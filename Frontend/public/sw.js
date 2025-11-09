@@ -1,12 +1,13 @@
 // Service Worker for SniffGuard PWA
-const CACHE_NAME = 'sniffguard-v1';
+const CACHE_NAME = 'sniffguard-v2';
 const RUNTIME_CACHE = 'sniffguard-runtime';
 
 // Assets to cache on install (only core files that exist)
 const PRECACHE_URLS = [
   '/',
   '/index.html',
-  '/manifest.json'
+  '/manifest.json',
+  '/apple-touch-icon.png'
 ];
 
 // Install event - cache static assets

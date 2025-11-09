@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { useAuthStore } from '@/store/authStore'
 import { useThemeStore } from '@/store/themeStore'
 import { Link, useNavigate } from 'react-router-dom'
@@ -9,13 +9,22 @@ import {
   ArrowLeftOnRectangleIcon,
   MoonIcon,
   SunIcon,
-  ComputerDesktopIcon
+  ComputerDesktopIcon,
+  ArrowDownTrayIcon
 } from '@heroicons/react/24/outline'
 
 const Layout = ({ children }) => {
   const { user, logout } = useAuthStore()
   const { theme, toggleTheme, isDarkMode } = useThemeStore()
   const navigate = useNavigate()
+  const [showInstallButton, setShowInstallButton] = useState(false)
+
+  useEffect(() => {
+    const installBtn = document.getElementById('install-button')
+    if (installBtn) {
+      setShowInstallButton(true)
+    }
+  }, [])
 
   const handleLogout = async () => {
     await logout()
@@ -26,6 +35,11 @@ const Layout = ({ children }) => {
     if (theme === 'dark') return <MoonIcon className="h-5 w-5" />
     if (theme === 'light') return <SunIcon className="h-5 w-5" />
     return <ComputerDesktopIcon className="h-5 w-5" />
+  }
+
+  const handleInstall = async () => {
+    const { promptInstall } = await import('@/utils/pwa')
+    await promptInstall()
   }
 
   return (
@@ -66,6 +80,19 @@ const Layout = ({ children }) => {
 
         {/* Bottom actions */}
         <div className="flex flex-col space-y-4">
+          {/* Install PWA Button */}
+          {showInstallButton && (
+            <button
+              id="install-button"
+              onClick={handleInstall}
+              className="p-3 rounded-lg text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
+              title="Install App"
+              style={{ display: 'none' }}
+            >
+              <ArrowDownTrayIcon className="h-6 w-6" />
+            </button>
+          )}
+
           <button
             onClick={toggleTheme}
             className="p-3 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors"

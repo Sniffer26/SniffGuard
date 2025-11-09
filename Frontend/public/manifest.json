@@ -10,5 +10,12 @@
   "scope": "/",
   "categories": ["social", "productivity"],
   "lang": "en",
-  "dir": "ltr"
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
 }

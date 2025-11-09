@@ -7,6 +7,7 @@ import { useThemeStore } from '@/store/themeStore'
 import Layout from '@/components/Layout/Layout.jsx'
 import ProtectedRoute from '@/components/Auth/ProtectedRoute.jsx'
 import LoadingSpinner from '@/components/UI/LoadingSpinner.jsx'
+import InstallToast from '@/components/UI/InstallToast.jsx'
 
 // Pages
 import LoginPage from '@/pages/LoginPage.jsx'
@@ -62,6 +63,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-dark-bg dark:bg-dark-bg transition-colors duration-200">
+      <InstallToast />
       <Routes>
         {/* Public routes */}
         <Route 
