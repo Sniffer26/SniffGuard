@@ -59,19 +59,31 @@ export const useAuthStore = create(
         set({ isLoading: true })
         
         try {
+          console.log('[AuthStore] Starting registration...')
+          
           // Generate encryption keys
+          console.log('[AuthStore] Generating key pair...')
           const keyPair = await encryptionService.generateKeyPair()
+          console.log('[AuthStore] Key pair generated successfully')
           
           const registrationData = {
             ...userData,
             publicKey: keyPair.publicKey
           }
-
+          
+          console.log('[AuthStore] Calling register API...')
           const response = await authService.register(registrationData)
           const { user, tokens } = response.data
+          console.log('[AuthStore] Registration API successful', { user })
 
           // Store private key securely
-          await encryptionService.storePrivateKey(keyPair.privateKey, userData.password)
+          console.log('[AuthStore] Storing private key...')
+          const keyStored = await encryptionService.storePrivateKey(keyPair.privateKey, userData.password)
+          if (!keyStored) {
+            console.warn('[AuthStore] Failed to store private key, but continuing...')
+          } else {
+            console.log('[AuthStore] Private key stored successfully')
+          }
 
           // Store tokens and user
           set({
@@ -86,13 +98,21 @@ export const useAuthStore = create(
           authService.setAuthHeader(tokens.accessToken)
 
           // Connect to socket
+          console.log('[AuthStore] Connecting to socket...')
           socketService.connect(tokens.accessToken)
 
           toast.success(`Welcome to SniffGuard, ${user.displayName || user.username}!`)
           
           return { success: true, user }
         } catch (error) {
-          const message = error.response?.data?.error || 'Registration failed'
+          console.error('[AuthStore] Registration error:', error)
+          console.error('[AuthStore] Error details:', {
+            message: error.message,
+            response: error.response?.data,
+            stack: error.stack
+          })
+          
+          const message = error.response?.data?.error || error.message || 'Registration failed'
           
           set({ isLoading: false })
           toast.error(message)
