@@ -1,0 +1,17 @@
+{
+  "version": 2,
+  "framework": "vite",
+  "buildCommand": "npm run build",
+  "outputDirectory": "build",
+  "installCommand": "npm install",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "env": {
+    "VITE_API_URL": "https://sniffguard-backend.onrender.com/api",
+    "VITE_SERVER_URL": "https://sniffguard-backend.onrender.com"
+  }
+}
