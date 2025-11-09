@@ -4,16 +4,16 @@ import { useAuthStore } from '@/store/authStore'
 import { useThemeStore } from '@/store/themeStore'
 
 // Components
-import Layout from '@/components/Layout/Layout'
-import ProtectedRoute from '@/components/Auth/ProtectedRoute'
-import LoadingSpinner from '@/components/UI/LoadingSpinner'
+import Layout from '@/components/Layout/Layout.jsx'
+import ProtectedRoute from '@/components/Auth/ProtectedRoute.jsx'
+import LoadingSpinner from '@/components/UI/LoadingSpinner.jsx'
 
 // Pages
-import LoginPage from '@/pages/LoginPage'
-import RegisterPage from '@/pages/RegisterPage'
-import ChatPage from '@/pages/ChatPage'
-import SettingsPage from '@/pages/SettingsPage'
-import ProfilePage from '@/pages/ProfilePage'
+import LoginPage from '@/pages/LoginPage.jsx'
+import RegisterPage from '@/pages/RegisterPage.jsx'
+import ChatPage from '@/pages/ChatPage.jsx'
+import SettingsPage from '@/pages/SettingsPage.jsx'
+import ProfilePage from '@/pages/ProfilePage.jsx'
 
 function App() {
   const { isAuthenticated, isLoading, checkAuth } = useAuthStore()
