@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useAuthStore } from '@/store/authStore'
 import { useThemeStore } from '@/store/themeStore'
 import { Link, useNavigate } from 'react-router-dom'
+import { promptInstall } from '@/utils/pwa'
 import { 
   ChatBubbleLeftRightIcon, 
   Cog6ToothIcon, 
@@ -38,7 +39,6 @@ const Layout = ({ children }) => {
   }
 
   const handleInstall = async () => {
-    const { promptInstall } = await import('@/utils/pwa')
     await promptInstall()
   }
 
