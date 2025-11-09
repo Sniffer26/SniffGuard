@@ -290,26 +290,22 @@ app.use('*', (req, res) => {
   })
 })
 
-// For production deployment (Vercel, etc.)
-if (process.env.NODE_ENV === 'production') {
-  module.exports = app
-} else {
-  // For local development
-  const PORT = process.env.PORT || 5000
-  
-  server.listen(PORT, () => {
-    console.log('🚀 ========================================')
-    console.log(`🛡️  SniffGuard Backend Server Started`)
-    console.log('🚀 ========================================')
-    console.log(`📡 Server running on port ${PORT}`)
-    console.log(`🌐 Local URL: http://localhost:${PORT}`)
-    console.log(`🔗 Health check: http://localhost:${PORT}/health`)
-    console.log(`🔒 Environment: ${process.env.NODE_ENV || 'development'}`)
-    console.log(`📱 Socket.io server ready for connections`)
-    console.log(`🗄️  Database: ${process.env.MONGODB_URI ? 'Connected' : 'Not configured'}`)
-    console.log('🚀 ========================================')
-  })
-}
+// Start server
+const PORT = process.env.PORT || 5000;
+const HOST = process.env.NODE_ENV === 'production' ? '0.0.0.0' : 'localhost';
+
+server.listen(PORT, HOST, () => {
+  console.log('🚀 ========================================');
+  console.log(`🛡️  SniffGuard Backend Server Started`);
+  console.log('🚀 ========================================');
+  console.log(`📡 Server running on ${HOST}:${PORT}`);
+  console.log(`🌐 Local URL: http://${HOST}:${PORT}`);
+  console.log(`🔗 Health check: http://${HOST}:${PORT}/health`);
+  console.log(`🔒 Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`📱 Socket.io server ready for connections`);
+  console.log(`🗄️  Database: ${process.env.MONGODB_URI ? 'Connected' : 'Not configured'}`);
+  console.log('🚀 ========================================');
+});
 
 // Graceful shutdown
 const gracefulShutdown = async (signal) => {
