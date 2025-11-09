@@ -36,46 +36,48 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config
 
-    // Prevent infinite loops
-    if (originalRequest.url?.includes('/auth/refresh')) {
+    // Prevent infinite loops - strict guards
+    if (!originalRequest || originalRequest._retry || originalRequest.url?.includes('/auth/refresh') || originalRequest.url?.includes('/auth/login')) {
       return Promise.reject(error)
     }
 
-    // Handle token expiration (only once per request)
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    // Handle token expiration (401 only, not network errors)
+    if (error.response?.status === 401) {
       originalRequest._retry = true
 
       try {
-        // Try to refresh token
-        const refreshToken = localStorage.getItem('sniffguard-auth')
-        if (refreshToken) {
-          const parsedData = JSON.parse(refreshToken)
-          
-          // Check if we have a refresh token
-          if (!parsedData.state.refreshToken) {
-            authService.handleAuthError()
-            return Promise.reject(error)
-          }
-          
-          const response = await api.post('/auth/refresh', {
-            refreshToken: parsedData.state.refreshToken
-          })
-
-          const { accessToken } = response.data.tokens
-          
-          // Update stored token
-          parsedData.state.accessToken = accessToken
-          localStorage.setItem('sniffguard-auth', JSON.stringify(parsedData))
-          
-          // Update auth header
-          authService.setAuthHeader(accessToken)
-          
-          // Retry original request
-          originalRequest.headers.Authorization = `Bearer ${accessToken}`
-          return api(originalRequest)
+        // Get refresh token from localStorage
+        const authData = localStorage.getItem('sniffguard-auth')
+        if (!authData) {
+          authService.handleAuthError()
+          return Promise.reject(error)
         }
+
+        const parsedData = JSON.parse(authData)
+        const refreshToken = parsedData?.state?.refreshToken
+        
+        // No refresh token available
+        if (!refreshToken) {
+          authService.handleAuthError()
+          return Promise.reject(error)
+        }
+        
+        // Try to refresh
+        const response = await api.post('/auth/refresh', { refreshToken })
+        const { accessToken } = response.data.tokens
+        
+        // Update stored token
+        parsedData.state.accessToken = accessToken
+        localStorage.setItem('sniffguard-auth', JSON.stringify(parsedData))
+        
+        // Update auth header
+        authService.setAuthHeader(accessToken)
+        
+        // Retry original request with new token
+        originalRequest.headers.Authorization = `Bearer ${accessToken}`
+        return api(originalRequest)
       } catch (refreshError) {
-        // Refresh failed, redirect to login
+        // Refresh failed - clear everything and redirect
         console.error('Token refresh failed:', refreshError)
         authService.handleAuthError()
         return Promise.reject(refreshError)
