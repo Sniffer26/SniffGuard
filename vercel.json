@@ -1,4 +1,7 @@
 {
+  "buildCommand": "cd Frontend && npm install && npm run build",
+  "outputDirectory": "Frontend/build",
+  "installCommand": "cd Frontend && npm install",
   "rewrites": [
     {
       "source": "/(.*)",
