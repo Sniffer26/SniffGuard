@@ -171,8 +171,10 @@ io.use((socket, next) => {
   try {
     const token = socket.handshake.auth.token
     
+    // If no token provided, allow connection but mark as unauthenticated
     if (!token) {
-      return next(new Error('Authentication error: No token provided'))
+      socket.isAuthenticated = false
+      return next()
     }
     
     const jwt = require('jsonwebtoken')
@@ -181,32 +183,43 @@ io.use((socket, next) => {
     socket.userId = decoded.userId
     socket.username = decoded.username
     socket.email = decoded.email
+    socket.isAuthenticated = true
     
     next()
   } catch (err) {
     console.error('Socket authentication error:', err.message)
-    next(new Error('Authentication error: Invalid token'))
+    // Allow connection but mark as unauthenticated
+    socket.isAuthenticated = false
+    next()
   }
 })
 
 // Socket.io connection handling
 io.on('connection', (socket) => {
-  console.log(`🔗 User ${socket.username} connected (ID: ${socket.id})`)
-  
-  // Join user to their personal room
-  socket.join(`user_${socket.userId}`)
-  
-  // Handle socket events
-  socketHandler(io, socket)
+  if (socket.isAuthenticated) {
+    console.log(`🔗 User ${socket.username} connected (ID: ${socket.id})`)
+    
+    // Join user to their personal room
+    socket.join(`user_${socket.userId}`)
+    
+    // Handle socket events
+    socketHandler(io, socket)
+  } else {
+    console.log(`🔗 Anonymous connection (ID: ${socket.id})`)
+  }
   
   // Handle disconnection
   socket.on('disconnect', (reason) => {
-    console.log(`👋 User ${socket.username} disconnected: ${reason}`)
+    if (socket.isAuthenticated) {
+      console.log(`👋 User ${socket.username} disconnected: ${reason}`)
+    } else {
+      console.log(`👋 Anonymous disconnected: ${reason}`)
+    }
   })
   
   // Handle socket errors
   socket.on('error', (error) => {
-    console.error(`🚨 Socket error for user ${socket.username}:`, error)
+    console.error(`🚨 Socket error:`, error)
   })
 })
 
