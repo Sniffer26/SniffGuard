@@ -312,7 +312,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // Graceful shutdown
-const gracefulShutdown = (signal) => {
+const gracefulShutdown = async (signal) => {
   console.log(`\n🛑 Received ${signal}. Starting graceful shutdown...`)
   
   server.close(() => {
@@ -320,10 +320,15 @@ const gracefulShutdown = (signal) => {
     
     // Close database connection
     const mongoose = require('mongoose')
-    mongoose.connection.close(() => {
-      console.log('✅ Database connection closed')
-      process.exit(0)
-    })
+    mongoose.connection.close()
+      .then(() => {
+        console.log('✅ Database connection closed')
+        process.exit(0)
+      })
+      .catch((err) => {
+        console.error('❌ Error closing database:', err)
+        process.exit(1)
+      })
   })
   
   // Force close after 10 seconds

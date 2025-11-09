@@ -436,11 +436,48 @@ router.post('/change-password', authenticateToken, validateChangePassword, async
 });
 
 // Verify token (for client-side validation)
-router.get('/verify', authenticateToken, (req, res) => {
-  res.json({
-    message: 'Token is valid',
-    user: req.user
-  });
+router.get('/verify', authenticateToken, async (req, res) => {
+  try {
+    // Get full user data
+    const user = await User.findById(req.user.id)
+      .populate('contacts.user', 'username displayName avatar isOnline lastSeen')
+      .populate('blockedUsers.user', 'username displayName');
+
+    if (!user) {
+      return res.status(404).json({
+        error: 'User not found',
+        code: 'USER_NOT_FOUND'
+      });
+    }
+
+    const userResponse = {
+      id: user._id,
+      username: user.username,
+      email: user.email,
+      displayName: user.displayName,
+      avatar: user.avatar,
+      publicKey: user.publicKey,
+      isVerified: user.isVerified,
+      preferences: user.preferences,
+      isOnline: user.isOnline,
+      lastSeen: user.lastSeen,
+      contacts: user.contacts,
+      blockedUsers: user.blockedUsers,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt
+    };
+
+    res.json({
+      message: 'Token is valid',
+      user: userResponse
+    });
+  } catch (error) {
+    console.error('Verify token error:', error);
+    res.status(500).json({
+      error: 'Failed to verify token',
+      code: 'VERIFY_TOKEN_ERROR'
+    });
+  }
 });
 
 module.exports = router;
