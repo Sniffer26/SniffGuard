@@ -188,18 +188,34 @@ export const useAuthStore = create(
         
         console.log('[AuthStore] checkAuth called', { hasAccessToken: !!accessToken, hasRefreshToken: !!refreshToken })
         
-        if (!accessToken) {
-          console.log('[AuthStore] No access token, setting loading to false')
-          set({ isLoading: false, isAuthenticated: false })
+        // If no tokens at all, clear state
+        if (!accessToken && !refreshToken) {
+          console.log('[AuthStore] No tokens found, clearing auth state')
+          set({ isLoading: false, isAuthenticated: false, user: null })
           return
+        }
+        
+        // If we have refreshToken but no accessToken, try to refresh first
+        if (!accessToken && refreshToken) {
+          console.log('[AuthStore] No access token but have refresh token, attempting refresh...')
+          set({ isLoading: true })
+          const refreshed = await get().refreshToken()
+          if (!refreshed) {
+            console.log('[AuthStore] Token refresh failed, clearing state')
+            set({ isLoading: false, isAuthenticated: false, user: null })
+            return
+          }
+          console.log('[AuthStore] Token refreshed successfully')
+          // Continue with verification using new accessToken
         }
 
         set({ isLoading: true })
         console.log('[AuthStore] Starting auth verification...')
 
         try {
-          // Set auth header
-          authService.setAuthHeader(accessToken)
+          // Set auth header with current token
+          const currentToken = get().accessToken
+          authService.setAuthHeader(currentToken)
 
           // Verify current token
           console.log('[AuthStore] Calling verifyToken API...')
@@ -216,7 +232,7 @@ export const useAuthStore = create(
 
           // Connect to socket if not already connected
           if (!socketService.isSocketConnected()) {
-            socketService.connect(accessToken)
+            socketService.connect(currentToken)
           }
 
         } catch (error) {
