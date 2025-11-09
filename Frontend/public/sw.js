@@ -2,13 +2,11 @@
 const CACHE_NAME = 'sniffguard-v1';
 const RUNTIME_CACHE = 'sniffguard-runtime';
 
-// Assets to cache on install
+// Assets to cache on install (only core files that exist)
 const PRECACHE_URLS = [
   '/',
   '/index.html',
-  '/manifest.json',
-  '/icon-192.png',
-  '/icon-512.png',
+  '/manifest.json'
 ];
 
 // Install event - cache static assets
@@ -17,8 +15,16 @@ self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       console.log('[SW] Precaching static assets');
-      return cache.addAll(PRECACHE_URLS);
+      // Cache files individually to avoid failing if one is missing
+      return Promise.all(
+        PRECACHE_URLS.map(url => 
+          cache.add(url).catch(err => console.log('[SW] Failed to cache:', url))
+        )
+      );
     }).then(() => {
+      return self.skipWaiting();
+    }).catch(err => {
+      console.log('[SW] Precache failed, but continuing:', err);
       return self.skipWaiting();
     })
   );

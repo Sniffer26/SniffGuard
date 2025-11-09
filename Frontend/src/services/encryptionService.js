@@ -32,6 +32,14 @@ class EncryptionService {
     await this.initialize()
 
     try {
+      // Ensure sodium is ready
+      await sodium.ready
+      
+      // Validate inputs
+      if (!privateKey || !password) {
+        throw new Error('Private key and password are required')
+      }
+
       // Derive key from password
       const salt = sodium.randombytes_buf(sodium.crypto_pwhash_SALTBYTES)
       const derivedKey = sodium.crypto_pwhash(
