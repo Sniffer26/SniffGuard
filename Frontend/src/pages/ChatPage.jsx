@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useAuthStore } from '@/store/authStore'
 import { 
   MagnifyingGlassIcon, 
@@ -12,15 +12,113 @@ import {
   MicrophoneIcon
 } from '@heroicons/react/24/outline'
 import { motion, AnimatePresence } from 'framer-motion'
+import { socketService } from '@/services/socketService'
+import { encryptionService } from '@/services/encryptionService'
 
 const ChatPage = () => {
   const { user } = useAuthStore()
   const [searchQuery, setSearchQuery] = useState('')
   const [messageInput, setMessageInput] = useState('')
   const [selectedChat, setSelectedChat] = useState(null)
+  const [messages, setMessages] = useState([])
 
   // Demo chats (will be replaced with real data)
   const demoChats = []
+
+  // Socket event listeners
+  useEffect(() => {
+    const handleChatCreated = ({ chat }) => {
+      console.log('Chat created:', chat)
+      setSelectedChat(chat)
+      socketService.joinChat(chat.chatId)
+    }
+
+    const handleChatMessages = ({ chatId, messages }) => {
+      console.log('Received chat messages:', messages)
+      if (selectedChat?.chatId === chatId) {
+        setMessages(messages)
+      }
+    }
+
+    const handleNewMessage = ({ chatId, message }) => {
+      console.log('New message received:', message)
+      if (selectedChat?.chatId === chatId) {
+        setMessages(prev => [...prev, message])
+      }
+    }
+
+    const handleMessageSent = ({ clientMessageId }) => {
+      console.log('Message sent:', clientMessageId)
+      setMessageInput('')
+    }
+
+    socketService.onChatCreated(handleChatCreated)
+    socketService.onChatMessages(handleChatMessages)
+    socketService.onNewMessage(handleNewMessage)
+    socketService.onMessageSent(handleMessageSent)
+
+    return () => {
+      socketService.off('chat_created', handleChatCreated)
+      socketService.off('chat_messages', handleChatMessages)
+      socketService.off('new_message', handleNewMessage)
+      socketService.off('message_sent', handleMessageSent)
+    }
+  }, [selectedChat])
+
+  const handleCreateSelfChat = () => {
+    if (!user?.id) {
+      console.error('No user ID')
+      return
+    }
+    console.log('Creating self-chat for user:', user.id)
+    socketService.createDirectChat(user.id)
+  }
+
+  const handleSendMessage = async () => {
+    if (!selectedChat || !messageInput.trim() || !user?.id) {
+      console.error('Cannot send message:', { selectedChat, messageInput, userId: user?.id })
+      return
+    }
+
+    try {
+      // Generate unique client message ID
+      const clientMessageId = encryptionService.generateSecureId()
+      
+      // Simple base64 encoding for testing (real encryption would be more complex)
+      const encryptedContent = btoa(messageInput.trim())
+      const encryptedKey = encryptionService.generateRandomBytes(32)
+      const nonce = encryptionService.generateRandomBytes(24)
+      const keyId = encryptionService.generateSecureId()
+
+      const recipients = [
+        {
+          user: user.id,
+          encryptedContent,
+          encryptedKey
+        }
+      ]
+
+      const messageData = {
+        recipients,
+        messageType: 'text',
+        chatId: selectedChat.chatId,
+        clientMessageId,
+        threadId: null,
+        metadata: {},
+        encryption: {
+          algorithm: 'XSalsa20-Poly1305',
+          keyId,
+          nonce,
+          authTag: ''
+        }
+      }
+
+      console.log('Sending message:', messageData)
+      socketService.sendMessage(messageData)
+    } catch (error) {
+      console.error('Error preparing message:', error)
+    }
+  }
 
   return (
     <div className="h-screen flex overflow-hidden bg-dark-bg dark:bg-dark-bg">
@@ -36,7 +134,10 @@ const ChatPage = () => {
               <button className="p-2 hover:bg-gray-100 dark:hover:bg-dark-hover rounded-full transition-colors">
                 <EllipsisVerticalIcon className="h-5 w-5 text-gray-600 dark:text-gray-400" />
               </button>
-              <button className="p-2 bg-primary-500 hover:bg-primary-600 rounded-full transition-colors">
+              <button 
+                className="p-2 bg-primary-500 hover:bg-primary-600 rounded-full transition-colors"
+                onClick={handleCreateSelfChat}
+              >
                 <PlusIcon className="h-5 w-5 text-white" />
               </button>
             </div>
@@ -74,7 +175,10 @@ const ChatPage = () => {
                 <p className="text-xs text-gray-600 dark:text-gray-400 mb-4 max-w-xs">
                   Start a secure conversation
                 </p>
-                <button className="px-5 py-2 bg-primary-500 hover:bg-primary-600 text-white text-sm rounded-full font-medium transition-colors shadow-md hover:shadow-lg">
+                <button 
+                  className="px-5 py-2 bg-primary-500 hover:bg-primary-600 text-white text-sm rounded-full font-medium transition-colors shadow-md hover:shadow-lg"
+                  onClick={handleCreateSelfChat}
+                >
                   New Chat
                 </button>
               </motion.div>
@@ -116,7 +220,20 @@ const ChatPage = () => {
 
             {/* Messages Area */}
             <div className="flex-1 overflow-y-auto px-4 py-3 min-h-0">
-              {/* Messages will go here */}
+              {messages.length === 0 ? (
+                <p className="text-xs text-gray-500 dark:text-gray-400 text-center">No messages yet</p>
+              ) : (
+                <div className="space-y-2">
+                  {messages.map(msg => (
+                    <div key={msg._id || msg.clientMessageId} className="text-sm text-gray-900 dark:text-white">
+                      {msg.sender?.username ? (
+                        <span className="font-semibold mr-1">{msg.sender.username}:</span>
+                      ) : null}
+                      <span className="text-xs text-gray-400">(encrypted)</span>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Message Input */}
@@ -141,7 +258,9 @@ const ChatPage = () => {
                   <motion.button
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    className="p-2.5 bg-primary-500 hover:bg-primary-600 rounded-full transition-colors shadow-md">
+                    className="p-2.5 bg-primary-500 hover:bg-primary-600 rounded-full transition-colors shadow-md"
+                    onClick={handleSendMessage}
+                  >
                     <PaperAirplaneIcon className="h-4 w-4 text-white" />
                   </motion.button>
                 ) : (
