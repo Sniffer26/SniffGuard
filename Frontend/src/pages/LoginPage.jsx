@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
-import { motion } from 'framer-motion'
-import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline'
+import { EyeIcon, EyeSlashIcon, LockClosedIcon } from '@heroicons/react/24/outline'
 import { useAuthStore } from '@/store/authStore'
 import { encryptionService } from '@/services/encryptionService'
 import LoadingSpinner from '@/components/UI/LoadingSpinner'
@@ -51,144 +50,134 @@ const LoginPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-dark-bg flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="bg-white dark:bg-dark-surface rounded-3xl p-8 shadow-2xl border border-gray-100 dark:border-dark-border"
-        >
-          {/* Logo and Header */}
-          <div className="text-center">
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-              className="mx-auto h-20 w-20 bg-signal-500 rounded-3xl flex items-center justify-center text-4xl mb-6 shadow-lg"
-            >
-              🛡️
-            </motion.div>
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-              Sign in to SniffGuard
-            </h2>
-            <p className="text-gray-600 dark:text-gray-400 text-sm">
-              Secure, private messaging
-            </p>
+    <div className="min-h-screen bg-white dark:bg-dark-bg flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-12">
+      {/* Main Container */}
+      <div className="w-full max-w-sm">
+        {/* Logo/Header */}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-12 h-12 bg-signal-500 rounded-lg mb-4">
+            <LockClosedIcon className="w-6 h-6 text-white" />
           </div>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
+            Sign in
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400 text-sm">
+            with your account
+          </p>
+        </div>
 
-          {/* Login Form */}
-          <form className="mt-8 space-y-5" onSubmit={handleSubmit(onSubmit)}>
-            {loginError && (
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-2xl p-4"
-              >
-                <p className="text-red-600 dark:text-red-400 text-sm text-center">{loginError}</p>
-              </motion.div>
+        {/* Login Form */}
+        <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
+          {/* Error Message */}
+          {loginError && (
+            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+              <p className="text-red-600 dark:text-red-400 text-sm">{loginError}</p>
+            </div>
+          )}
+
+          {/* Username/Email Input */}
+          <div>
+            <label htmlFor="identifier" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Email or Username
+            </label>
+            <input
+              {...register('identifier', {
+                required: 'Email or username is required',
+                minLength: {
+                  value: 3,
+                  message: 'Must be at least 3 characters'
+                }
+              })}
+              type="text"
+              autoComplete="username"
+              className="w-full px-4 py-2.5 border border-gray-300 dark:border-dark-border bg-white dark:bg-dark-elevated rounded-lg text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-signal-500 focus:border-transparent transition-all"
+              placeholder="name@example.com"
+            />
+            {errors.identifier && (
+              <p className="mt-1.5 text-red-600 dark:text-red-400 text-xs">{errors.identifier.message}</p>
             )}
-
-            <div className="space-y-4">
-              {/* Username/Email Field */}
-              <div>
-                <label htmlFor="identifier" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Username or Email
-                </label>
-                <input
-                  {...register('identifier', {
-                    required: 'Username or email is required',
-                    minLength: {
-                      value: 3,
-                      message: 'Must be at least 3 characters'
-                    }
-                  })}
-                  type="text"
-                  autoComplete="username"
-                  className="w-full px-4 py-3.5 border border-gray-300 dark:border-dark-border bg-white dark:bg-dark-elevated rounded-2xl text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-signal-500 focus:border-transparent transition-all"
-                  placeholder="Enter your username or email"
-                />
-                {errors.identifier && (
-                  <p className="mt-2 text-red-600 dark:text-red-400 text-xs">{errors.identifier.message}</p>
-                )}
-              </div>
-
-              {/* Password Field */}
-              <div className="relative">
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Password
-                </label>
-                <input
-                  {...register('password', {
-                    required: 'Password is required',
-                    minLength: {
-                      value: 8,
-                      message: 'Password must be at least 8 characters'
-                    }
-                  })}
-                  type={showPassword ? 'text' : 'password'}
-                  autoComplete="current-password"
-                  className="w-full px-4 py-3.5 pr-12 border border-gray-300 dark:border-dark-border bg-white dark:bg-dark-elevated rounded-2xl text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-signal-500 focus:border-transparent transition-all"
-                  placeholder="Enter your password"
-                />
-                <button
-                  type="button"
-                  className="absolute right-4 top-[42px] flex items-center"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? (
-                    <EyeSlashIcon className="h-5 w-5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300" />
-                  ) : (
-                    <EyeIcon className="h-5 w-5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300" />
-                  )}
-                </button>
-                {errors.password && (
-                  <p className="mt-2 text-red-600 dark:text-red-400 text-xs">{errors.password.message}</p>
-                )}
-              </div>
-            </div>
-
-            {/* Login Button */}
-            <motion.button
-              whileHover={{ scale: 1.01 }}
-              whileTap={{ scale: 0.99 }}
-              type="submit"
-              disabled={isSubmitting || isLoading}
-              className="w-full flex justify-center py-4 px-4 text-base font-semibold rounded-2xl text-white bg-signal-500 hover:bg-signal-600 focus:outline-none focus:ring-4 focus:ring-signal-500/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg"
-            >
-              {(isSubmitting || isLoading) ? (
-                <LoadingSpinner size="sm" className="text-white" />
-              ) : (
-                'Sign In'
-              )}
-            </motion.button>
-
-            {/* Sign up link */}
-            <div className="text-center pt-2">
-              <p className="text-gray-600 dark:text-gray-400 text-sm">
-                Don't have an account?{' '}
-                <Link
-                  to="/register"
-                  className="font-semibold text-signal-500 hover:text-signal-600 transition-colors"
-                >
-                  Create account
-                </Link>
-              </p>
-            </div>
-          </form>
-
-          {/* Security Notice */}
-          <div className="mt-8 text-center">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-gray-50 dark:bg-dark-elevated rounded-full">
-              <svg className="w-4 h-4 text-gray-600 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-              </svg>
-              <span className="text-xs text-gray-600 dark:text-gray-400 font-medium">
-                End-to-end encrypted
-              </span>
-            </div>
           </div>
-        </motion.div>
+
+          {/* Password Input */}
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                Password
+              </label>
+              <Link
+                to="#"
+                className="text-xs text-signal-500 hover:text-signal-600 transition-colors"
+              >
+                Forgot?
+              </Link>
+            </div>
+            <div className="relative">
+              <input
+                {...register('password', {
+                  required: 'Password is required',
+                  minLength: {
+                    value: 8,
+                    message: 'Password must be at least 8 characters'
+                  }
+                })}
+                type={showPassword ? 'text' : 'password'}
+                autoComplete="current-password"
+                className="w-full px-4 py-2.5 pr-11 border border-gray-300 dark:border-dark-border bg-white dark:bg-dark-elevated rounded-lg text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-signal-500 focus:border-transparent transition-all"
+                placeholder="••••••••"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+              >
+                {showPassword ? (
+                  <EyeSlashIcon className="w-5 h-5" />
+                ) : (
+                  <EyeIcon className="w-5 h-5" />
+                )}
+              </button>
+            </div>
+            {errors.password && (
+              <p className="mt-1.5 text-red-600 dark:text-red-400 text-xs">{errors.password.message}</p>
+            )}
+          </div>
+
+          {/* Checkbox - I agree to processing */}
+          <label className="flex items-start gap-2.5 cursor-pointer">
+            <input
+              type="checkbox"
+              defaultChecked
+              className="w-4 h-4 mt-0.5 rounded border-gray-300 dark:border-dark-border text-signal-500 focus:ring-signal-500 cursor-pointer"
+            />
+            <span className="text-xs text-gray-600 dark:text-gray-400">
+              I agree to the processing of personal data
+            </span>
+          </label>
+
+          {/* Sign In Button */}
+          <button
+            type="submit"
+            disabled={isSubmitting || isLoading}
+            className="w-full py-2.5 px-4 text-sm font-semibold rounded-lg text-white bg-signal-500 hover:bg-signal-600 focus:outline-none focus:ring-2 focus:ring-signal-500/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+          >
+            {(isSubmitting || isLoading) ? (
+              <LoadingSpinner size="sm" className="text-white" />
+            ) : (
+              'Sign in'
+            )}
+          </button>
+        </form>
+
+        {/* Sign Up Link */}
+        <div className="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
+          Don't have an account?{' '}
+          <Link
+            to="/register"
+            className="font-medium text-signal-500 hover:text-signal-600 transition-colors"
+          >
+            Create one
+          </Link>
+        </div>
       </div>
     </div>
   )
