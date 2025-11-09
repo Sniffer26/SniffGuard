@@ -130,9 +130,7 @@ const userSchema = new mongoose.Schema({
   }
 });
 
-// Indexes for performance
-userSchema.index({ username: 1 });
-userSchema.index({ email: 1 });
+// Indexes for performance (username and email already indexed via unique: true)
 userSchema.index({ isOnline: 1 });
 userSchema.index({ lastSeen: 1 });
 

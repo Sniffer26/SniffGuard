@@ -4,8 +4,7 @@ const chatSchema = new mongoose.Schema({
   chatId: {
     type: String,
     required: true,
-    unique: true,
-    index: true
+    unique: true
   },
   type: {
     type: String,
@@ -194,8 +193,7 @@ const chatSchema = new mongoose.Schema({
   }
 });
 
-// Indexes for performance
-chatSchema.index({ chatId: 1 });
+// Indexes for performance (chatId already indexed via unique: true)
 chatSchema.index({ type: 1 });
 chatSchema.index({ 'participants.user': 1 });
 chatSchema.index({ creator: 1 });
