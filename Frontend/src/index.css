@@ -48,35 +48,13 @@
 
 /* Custom component styles */
 @layer components {
-  /* Glass effect */
-  .glass {
-    @apply bg-white/10 backdrop-blur-md border border-white/20;
-  }
-  
-  .glass-dark {
-    @apply bg-gray-900/10 backdrop-blur-md border border-gray-700/20;
-  }
-  
-  /* Animated gradient background */
-  .gradient-animated {
-    background: linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #f5576c);
-    background-size: 400% 400%;
-    animation: gradientShift 15s ease infinite;
-  }
-  
-  @keyframes gradientShift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
-  
-  /* Chat bubble styles */
+  /* Chat bubble styles - Signal-like */
   .chat-bubble-sent {
-    @apply bg-primary-500 text-white rounded-2xl rounded-br-md px-4 py-2 max-w-xs ml-auto;
+    @apply bg-signal-500 text-white rounded-2xl rounded-br-md px-3 py-2 max-w-[70%] ml-auto;
   }
   
   .chat-bubble-received {
-    @apply bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-2xl rounded-bl-md px-4 py-2 max-w-xs border border-gray-200 dark:border-gray-600;
+    @apply bg-dark-elevated dark:bg-dark-elevated text-gray-900 dark:text-white rounded-2xl rounded-bl-md px-3 py-2 max-w-[70%];
   }
   
   /* Typing indicator */

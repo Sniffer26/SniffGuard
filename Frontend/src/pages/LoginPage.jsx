@@ -51,13 +51,13 @@ const LoginPage = () => {
   }
 
   return (
-    <div className="min-h-screen gradient-animated flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-white dark:bg-dark-bg flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="glass rounded-2xl p-8 backdrop-blur-md"
+          className="bg-white dark:bg-dark-surface rounded-3xl p-8 shadow-2xl border border-gray-100 dark:border-dark-border"
         >
           {/* Logo and Header */}
           <div className="text-center">
@@ -65,34 +65,34 @@ const LoginPage = () => {
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-              className="mx-auto h-16 w-16 bg-white/20 rounded-2xl flex items-center justify-center text-3xl mb-6"
+              className="mx-auto h-20 w-20 bg-signal-500 rounded-3xl flex items-center justify-center text-4xl mb-6 shadow-lg"
             >
               🛡️
             </motion.div>
-            <h2 className="text-3xl font-bold text-white mb-2">
-              Welcome Back
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+              Sign in to SniffGuard
             </h2>
-            <p className="text-white/80 text-sm">
-              Sign in to your secure SniffGuard account
+            <p className="text-gray-600 dark:text-gray-400 text-sm">
+              Secure, private messaging
             </p>
           </div>
 
           {/* Login Form */}
-          <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
+          <form className="mt-8 space-y-5" onSubmit={handleSubmit(onSubmit)}>
             {loginError && (
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                className="bg-red-500/20 border border-red-500/30 rounded-lg p-3"
+                className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-2xl p-4"
               >
-                <p className="text-red-200 text-sm text-center">{loginError}</p>
+                <p className="text-red-600 dark:text-red-400 text-sm text-center">{loginError}</p>
               </motion.div>
             )}
 
             <div className="space-y-4">
               {/* Username/Email Field */}
               <div>
-                <label htmlFor="identifier" className="sr-only">
+                <label htmlFor="identifier" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Username or Email
                 </label>
                 <input
@@ -105,17 +105,17 @@ const LoginPage = () => {
                   })}
                   type="text"
                   autoComplete="username"
-                  className="relative block w-full px-4 py-3 border-0 bg-white/10 backdrop-blur-md rounded-lg placeholder-white/60 text-white focus:outline-none focus:ring-2 focus:ring-white/30 focus:bg-white/20 transition-all duration-200"
-                  placeholder="Username or Email"
+                  className="w-full px-4 py-3.5 border border-gray-300 dark:border-dark-border bg-white dark:bg-dark-elevated rounded-2xl text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-signal-500 focus:border-transparent transition-all"
+                  placeholder="Enter your username or email"
                 />
                 {errors.identifier && (
-                  <p className="mt-1 text-red-300 text-xs">{errors.identifier.message}</p>
+                  <p className="mt-2 text-red-600 dark:text-red-400 text-xs">{errors.identifier.message}</p>
                 )}
               </div>
 
               {/* Password Field */}
               <div className="relative">
-                <label htmlFor="password" className="sr-only">
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Password
                 </label>
                 <input
@@ -128,106 +128,64 @@ const LoginPage = () => {
                   })}
                   type={showPassword ? 'text' : 'password'}
                   autoComplete="current-password"
-                  className="relative block w-full px-4 py-3 pr-12 border-0 bg-white/10 backdrop-blur-md rounded-lg placeholder-white/60 text-white focus:outline-none focus:ring-2 focus:ring-white/30 focus:bg-white/20 transition-all duration-200"
-                  placeholder="Password"
+                  className="w-full px-4 py-3.5 pr-12 border border-gray-300 dark:border-dark-border bg-white dark:bg-dark-elevated rounded-2xl text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-signal-500 focus:border-transparent transition-all"
+                  placeholder="Enter your password"
                 />
                 <button
                   type="button"
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  className="absolute right-4 top-[42px] flex items-center"
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? (
-                    <EyeSlashIcon className="h-5 w-5 text-white/60 hover:text-white/80" />
+                    <EyeSlashIcon className="h-5 w-5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300" />
                   ) : (
-                    <EyeIcon className="h-5 w-5 text-white/60 hover:text-white/80" />
+                    <EyeIcon className="h-5 w-5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300" />
                   )}
                 </button>
                 {errors.password && (
-                  <p className="mt-1 text-red-300 text-xs">{errors.password.message}</p>
+                  <p className="mt-2 text-red-600 dark:text-red-400 text-xs">{errors.password.message}</p>
                 )}
-              </div>
-            </div>
-
-            {/* Remember me and Forgot password */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <input
-                  id="remember-me"
-                  name="remember-me"
-                  type="checkbox"
-                  className="h-4 w-4 rounded border-white/30 bg-white/10 text-white focus:ring-white/30"
-                />
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-white/80">
-                  Remember me
-                </label>
-              </div>
-
-              <div className="text-sm">
-                <Link
-                  to="/forgot-password"
-                  className="text-white/80 hover:text-white transition-colors duration-200"
-                >
-                  Forgot password?
-                </Link>
               </div>
             </div>
 
             {/* Login Button */}
             <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
               type="submit"
               disabled={isSubmitting || isLoading}
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-gray-900 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+              className="w-full flex justify-center py-4 px-4 text-base font-semibold rounded-2xl text-white bg-signal-500 hover:bg-signal-600 focus:outline-none focus:ring-4 focus:ring-signal-500/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg"
             >
               {(isSubmitting || isLoading) ? (
-                <LoadingSpinner size="sm" className="text-gray-900" />
+                <LoadingSpinner size="sm" className="text-white" />
               ) : (
                 'Sign In'
               )}
             </motion.button>
 
             {/* Sign up link */}
-            <div className="text-center">
-              <p className="text-white/80 text-sm">
+            <div className="text-center pt-2">
+              <p className="text-gray-600 dark:text-gray-400 text-sm">
                 Don't have an account?{' '}
                 <Link
                   to="/register"
-                  className="font-medium text-white hover:text-white/80 transition-colors duration-200"
+                  className="font-semibold text-signal-500 hover:text-signal-600 transition-colors"
                 >
-                  Sign up
+                  Create account
                 </Link>
               </p>
             </div>
           </form>
 
           {/* Security Notice */}
-          <div className="mt-6 text-center">
-            <p className="text-white/60 text-xs">
-              🔒 Your messages are end-to-end encrypted
-            </p>
-          </div>
-        </motion.div>
-
-        {/* Features */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.5 }}
-          className="text-center space-y-2"
-        >
-          <div className="flex justify-center space-x-6 text-white/80 text-sm">
-            <div className="flex items-center">
-              <span className="mr-1">🔐</span>
-              E2E Encrypted
-            </div>
-            <div className="flex items-center">
-              <span className="mr-1">🚫</span>
-              No Tracking
-            </div>
-            <div className="flex items-center">
-              <span className="mr-1">🌍</span>
-              Open Source
+          <div className="mt-8 text-center">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-gray-50 dark:bg-dark-elevated rounded-full">
+              <svg className="w-4 h-4 text-gray-600 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+              </svg>
+              <span className="text-xs text-gray-600 dark:text-gray-400 font-medium">
+                End-to-end encrypted
+              </span>
             </div>
           </div>
         </motion.div>

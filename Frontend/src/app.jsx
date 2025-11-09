@@ -32,18 +32,14 @@ function App() {
   useEffect(() => {
     const root = document.documentElement
     
-    if (theme === 'dark') {
+    // Default to dark mode for Signal-like experience
+    if (theme === 'dark' || !theme) {
       root.classList.add('dark')
     } else if (theme === 'light') {
       root.classList.remove('dark')
     } else {
-      // Auto theme - use system preference
-      const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-      if (isDark) {
-        root.classList.add('dark')
-      } else {
-        root.classList.remove('dark')
-      }
+      // Auto theme - prefer dark mode
+      root.classList.add('dark')
     }
   }, [theme])
 
@@ -51,10 +47,10 @@ function App() {
   if (isLoading) {
     console.log('[App] Showing loading spinner, isLoading:', isLoading)
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-dark-bg dark:bg-dark-bg flex items-center justify-center">
         <div className="text-center">
           <LoadingSpinner size="lg" />
-          <p className="mt-4 text-gray-600 dark:text-gray-400">
+          <p className="mt-4 text-gray-400 dark:text-gray-400">
             Loading SniffGuard...
           </p>
         </div>
@@ -65,7 +61,7 @@ function App() {
   console.log('[App] Rendering app, isAuthenticated:', isAuthenticated, 'isLoading:', isLoading)
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
+    <div className="min-h-screen bg-dark-bg dark:bg-dark-bg transition-colors duration-200">
       <Routes>
         {/* Public routes */}
         <Route 
